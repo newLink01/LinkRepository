@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ShowDatabaseApp.Properties
+namespace YouthCenterApp.Properties
 {
 
 
