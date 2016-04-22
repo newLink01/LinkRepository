@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<button type="button" onclick="GotoVK()" >Go to vk </button>
+
+<script>
+
+    function GotoVK() {
+        location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=pages&redirect_uri=http://localhost:52324/Home/Index&display=page&v=5.50&response_type=token';
+    }
+
+    </script>
