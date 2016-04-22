@@ -1,11 +1,38 @@
 ﻿@model VKWikiAPI.Models.AccessToken
-
 @{
-    ViewBag.Title = "Manipulation page";
-
+    ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
 
 
+
+<button type="button" onclick="GetAccessToken()"> Get access </button>
+<br><br>
+
+@ViewBag.AccessToken
+
+
+
+<script>
+
+    function GetAccessToken() {
+        var URL = window.location.toString();
+        var accessToken;
+
+        var ind = URL.indexOf('access_token=');
+        if (ind == -1) { return null; }
+
+        ind += 'access_token='.length;
+
+        var i = ind;
+        while (URL[i] != '&') {
+            accessToken += URL[i];
+            i++;
+        }
+
+        alert (accessToken);
+    }
+
+</script>
