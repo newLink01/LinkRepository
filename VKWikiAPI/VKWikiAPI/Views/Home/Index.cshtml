@@ -1,40 +1,49 @@
-﻿@model string 
+﻿
+
 @{
     ViewBag.Title = "Index";
 }
 
+
 <h2>Index</h2>
 
 <button type="button" onclick="GoToVK()"> VK authorize </button>
-<button type="button" onclick="SetToken()" > Get token </button>
-<button type="button" > Get status </button>
+<button type="button" onclick="SetToken()"> Get token </button>
+
+
+
+
 
 <script>
-
-    function GoToVK() {
-        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
-    }
-
+    
     function SetToken() {
+        var accessToken = "";
         var currentUrl = window.location.href.toString();
-        
         var currentInd = currentUrl.indexOf('access_token=');
-        
-        
-        if (currentInd == -1) { return 'иди нахуй тварь';}
+
+
+        if (currentInd == -1) { return 'WRONG'; }
         currentInd += 'access_token='.length;
 
         //alert(currentUrl.substr(currentInd,currentInd+10));
-        var accessToken = "";
+        
         for (currentInd; currentInd < currentUrl.length; currentInd++) {
-            if (currentUrl[currentInd] == '&') { break;}
+            if (currentUrl[currentInd] == '&') { break; }
             else {
                 accessToken += currentUrl[currentInd];
             }
         }
-        return accessToken;
+
+            $.get("http://localhost:63643/Home/GetToken", {accessToken : accessToken} , function (data) {
+                alert("Load was performed.");
+            });
+    }
+
+    function GoToVK() {
+        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
 
     }
 
-   
+
+
 </script>

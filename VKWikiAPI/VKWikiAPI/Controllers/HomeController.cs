@@ -8,20 +8,21 @@ namespace VKWikiAPI.Controllers
 {
     public class HomeController : Controller
     {
-        private string AccessToken { set; get; }
-       [HttpGet]
+        private string AccessToken { set; get; } = "blabla";
+
+        [HttpGet]
         public ActionResult Index()
         {
-            ViewBag.AccessToken = this.AccessToken;
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Index(string accessToken) {
+        [HttpGet]
+        public ActionResult GetToken(string accessToken) {
             this.AccessToken = accessToken;
-            ViewBag.AccessToken = this.AccessToken;
             return View();
         }
+
+
 
 
     }
