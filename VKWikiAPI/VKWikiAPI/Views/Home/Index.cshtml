@@ -8,8 +8,9 @@
 <button type="button" onclick="GoToVK()"> VK authorize </button>
 <button type="button" onclick="SetToken()"> Get token </button>
 <button type="button" onclick="ShowFriends()"> Show friends </button>
-<button type="button" onclick="GetWall()"> Get wall</button>
+<button type="button" onclick="GetWall()"> get wall </button>
 
+<button type="button" onclick="TestGet()"> Get test values </button>
 
 <script>
     
@@ -47,9 +48,8 @@
 
         $.get("http://localhost:63643/Home/GetFriends", function (json) {
             var result = JSON.parse(json);
-
-            result.response.forEach(function (item, i) {
-                alert(i + " : " + item);
+            result.forEach(function (item, i) {
+                alert(item);
             });
         }
         );
@@ -58,22 +58,37 @@
 
 
     function TestFunc() {
-        var json = '{"resp": [123,123]}';
+       /* var json = '{"resp": [123,123]}';
+        var json2 = '{"resp : "}'
+
         var result = JSON.parse(json);
 
         result.resp.forEach(function (item, i) {
             alert(i + " : " + item);
-        });
-            
-    }
+        });*/
 
+        var json = '{"resp" : [1117,{"id" = 1,"name" = "zhenya"}]}';
+        var result = JSON.parse(json);
+       // alert(json);
+        alert("fasdasf");
+    }
     function GetWall() {
         $.get("http://localhost:63643/Home/GetWall", function (json) {
             var result = JSON.parse(json);
             
-            alert(result.text);
+            alert(json);
             
 
         });
+    }
+
+
+    function TestGet() {
+        $.get("http://localhost:63643/Home/TestGet", function (obj) {
+            //  var result = JSON.parse(json);
+
+            alert(obj);
+        }
+       );
     }
 </script>

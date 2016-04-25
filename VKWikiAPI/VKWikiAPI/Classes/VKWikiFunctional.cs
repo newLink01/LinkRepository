@@ -4,16 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Net;
 using System.IO;
-
-
+using Newtonsoft.Json.Linq;
+using VKWikiAPI.ToJSONParse;
+using Newtonsoft.Json;
 namespace VKWikiAPI.Classes
 {
     public class VKWikiFunctional
     {
 
 
-
-        public string VKGetFriendsJSON(string accessToken)
+        public object VKGetFriends(string accessToken)
         {
             List<string> friends = new List<string>();
 
@@ -24,7 +24,6 @@ namespace VKWikiAPI.Classes
             WebResponse resp = req.GetResponse();
 
 
-
             using (Stream dataStream = resp.GetResponseStream())
             {
                 using (StreamReader reader = new StreamReader(dataStream))
@@ -34,13 +33,41 @@ namespace VKWikiAPI.Classes
             }
 
 
-            return responseFromServer;
+            /*  JObject result = JObject.Parse(responseFromServer);
+              JArray items = result["response"] as JArray;
+              if (items == null) return null;
+
+              List<string> friendsIds = new List<string>();
+
+              foreach (var c in items) {
+                  friendsIds.Add(c.ToString());
+              }
+              */
+
+            JObject result = JObject.Parse(responseFromServer);
+            List<string> friendsIds = new List<string>();
+
+            foreach (var c in result["response"]) {
+                friendsIds.Add(c.ToString());
+            }
+
+            var friendsIdsJSON = JsonConvert.SerializeObject(friendsIds);
+            return friendsIdsJSON;
         }
 
-        public string VKGetFirstPostJSON(string accessToken)
+
+
+
+      
+
+
+
+
+
+        public JObject VKGetFirstPost(string accessToken)
         {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?params[count]=1&params[user_id]=166724944&params[offset]=0&access_token=" + accessToken;
+            string url = "https://api.vk.com/method/wall.get?count=3&access_token=" + accessToken;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
@@ -54,7 +81,8 @@ namespace VKWikiAPI.Classes
                     responseFromServer = reader.ReadToEnd();
                 }
             }
-            return responseFromServer;
+            JObject o = JObject.Parse(responseFromServer);
+            return o;
 
         }
 

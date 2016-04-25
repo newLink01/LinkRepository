@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using VKWikiAPI.Classes;
+using Newtonsoft.Json.Linq;
+using VKWikiAPI.ToJSONParse;
 namespace VKWikiAPI.Controllers
 {
     public class HomeController : Controller
@@ -13,6 +15,7 @@ namespace VKWikiAPI.Controllers
 
         public HomeController() {
             functional = new VKWikiFunctional();
+            
         }
 
         [HttpGet]
@@ -29,13 +32,18 @@ namespace VKWikiAPI.Controllers
 
       
         [HttpGet]
-        public string GetFriends() {
-            return functional.VKGetFriendsJSON(AccessToken);
+        public object GetFriends() {
+            return functional.VKGetFriends(AccessToken);
         }
 
         [HttpGet]
-        public string GetWall() {
-            return functional.VKGetFirstPostJSON(AccessToken);
+        public JObject GetWall() {
+            return functional.VKGetFirstPost(AccessToken);
         }
+
+       /* [HttpGet]
+        public object TestGet() {
+            return functional.TestGetValues();
+        }*/
     }
 }
