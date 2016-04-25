@@ -7,9 +7,8 @@
 
 <button type="button" onclick="GoToVK()"> VK authorize </button>
 <button type="button" onclick="SetToken()"> Get token </button>
-<button type="button" onclick="ShowStatus()">Show status </button>
 <button type="button" onclick="ShowFriends()"> Show friends </button>
-
+<button type="button" onclick="GetWall()"> Get wall</button>
 
 
 <script>
@@ -38,23 +37,43 @@
     }
 
     function GoToVK() {
-        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
+        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999,status&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
 
     }
 
-    function ShowStatus() {
-       
-        $.get("http://localhost:63643/Home/GetStatus", function (data) {
-            alert(data);
-        });
-    }
+   
 
     function ShowFriends() {
 
-        $.get("http://localhost:63643/Home/GetFriends", function (data) {
-            alert(data);
-        });
+        $.get("http://localhost:63643/Home/GetFriends", function (json) {
+            var result = JSON.parse(json);
 
+            result.response.forEach(function (item, i) {
+                alert(i + " : " + item);
+            });
+        }
+        );
     }
     
+
+
+    function TestFunc() {
+        var json = '{"resp": [123,123]}';
+        var result = JSON.parse(json);
+
+        result.resp.forEach(function (item, i) {
+            alert(i + " : " + item);
+        });
+            
+    }
+
+    function GetWall() {
+        $.get("http://localhost:63643/Home/GetWall", function (json) {
+            var result = JSON.parse(json);
+            
+            alert(result.text);
+            
+
+        });
+    }
 </script>

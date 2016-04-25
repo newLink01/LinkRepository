@@ -27,14 +27,15 @@ namespace VKWikiAPI.Controllers
             return View();
         }
 
+      
         [HttpGet]
-        public string GetStatus() {
-            return functional.VKGetStatus(AccessToken); 
+        public string GetFriends() {
+            return functional.VKGetFriendsJSON(AccessToken);
         }
 
         [HttpGet]
-        public string GetFriends() {
-            return functional.VKGetFriends(AccessToken);
+        public string GetWall() {
+            return functional.VKGetFirstPostJSON(AccessToken);
         }
     }
 }
