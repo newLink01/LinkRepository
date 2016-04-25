@@ -40,9 +40,6 @@ namespace VKWikiAPI.Controllers
             return functional.VKGetTextsFromSomePosts(AccessToken);
         }
 
-       /* [HttpGet]
-        public object TestGet() {
-            return functional.TestGetValues();
-        }*/
+       
     }
 }

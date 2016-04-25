@@ -76,6 +76,7 @@
     function GetTextsFromPosts() {
         $.get("http://localhost:63643/Home/GetWall", function (json) {
             var result = JSON.parse(json);
+            
             result.forEach(function (item, i) {
                 alert(item);
             });
@@ -85,13 +86,4 @@
         });
     }
 
-
-    function TestGet() {
-        $.get("http://localhost:63643/Home/TestGet", function (obj) {
-            //  var result = JSON.parse(json);
-
-            alert(obj);
-        }
-       );
-    }
 </script>

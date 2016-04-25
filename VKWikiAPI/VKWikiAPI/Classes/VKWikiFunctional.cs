@@ -54,7 +54,7 @@ namespace VKWikiAPI.Classes
         public object VKGetTextsFromSomePosts(string accessToken)
         {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?count=3&access_token=" + accessToken;
+            string url = "https://api.vk.com/method/wall.get?count=4&access_token=" + accessToken;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
@@ -70,14 +70,12 @@ namespace VKWikiAPI.Classes
             List<string> textsOfThePosts = new List<string>();
 
             foreach (var c in result["response"]) {
-                if (c.Type != JTokenType.Object) continue;
+                if (c.Type != JTokenType.Object || c["text"].ToString().Length == 0) continue;
                 textsOfThePosts.Add(c["text"].ToString());
             }
 
             var textsOfThePostsJSON = JsonConvert.SerializeObject(textsOfThePosts);
-
             return textsOfThePostsJSON;
-
         }
 
     }
