@@ -8,7 +8,7 @@
 <button type="button" onclick="GoToVK()"> VK authorize </button>
 <button type="button" onclick="SetToken()"> Get token </button>
 <button type="button" onclick="ShowFriends()"> Show friends </button>
-<button type="button" onclick="GetWall()"> get wall </button>
+<button type="button" onclick="GetTextsFromPosts()"> get wall </button>
 
 <button type="button" onclick="TestGet()"> Get test values </button>
 
@@ -72,11 +72,14 @@
        // alert(json);
         alert("fasdasf");
     }
-    function GetWall() {
+
+    function GetTextsFromPosts() {
         $.get("http://localhost:63643/Home/GetWall", function (json) {
             var result = JSON.parse(json);
-            
-            alert(json);
+            result.forEach(function (item, i) {
+                alert(item);
+            });
+           
             
 
         });

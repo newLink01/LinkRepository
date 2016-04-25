@@ -5,7 +5,6 @@ using System.Web;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using VKWikiAPI.ToJSONParse;
 using Newtonsoft.Json;
 namespace VKWikiAPI.Classes
 {
@@ -32,18 +31,6 @@ namespace VKWikiAPI.Classes
                 }
             }
 
-
-            /*  JObject result = JObject.Parse(responseFromServer);
-              JArray items = result["response"] as JArray;
-              if (items == null) return null;
-
-              List<string> friendsIds = new List<string>();
-
-              foreach (var c in items) {
-                  friendsIds.Add(c.ToString());
-              }
-              */
-
             JObject result = JObject.Parse(responseFromServer);
             List<string> friendsIds = new List<string>();
 
@@ -64,15 +51,13 @@ namespace VKWikiAPI.Classes
 
 
 
-        public JObject VKGetFirstPost(string accessToken)
+        public object VKGetTextsFromSomePosts(string accessToken)
         {
             string responseFromServer = null;
             string url = "https://api.vk.com/method/wall.get?count=3&access_token=" + accessToken;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
-
-
 
             using (Stream dataStream = resp.GetResponseStream())
             {
@@ -81,8 +66,17 @@ namespace VKWikiAPI.Classes
                     responseFromServer = reader.ReadToEnd();
                 }
             }
-            JObject o = JObject.Parse(responseFromServer);
-            return o;
+            JObject result = JObject.Parse(responseFromServer);
+            List<string> textsOfThePosts = new List<string>();
+
+            foreach (var c in result["response"]) {
+                if (c.Type != JTokenType.Object) continue;
+                textsOfThePosts.Add(c["text"].ToString());
+            }
+
+            var textsOfThePostsJSON = JsonConvert.SerializeObject(textsOfThePosts);
+
+            return textsOfThePostsJSON;
 
         }
 

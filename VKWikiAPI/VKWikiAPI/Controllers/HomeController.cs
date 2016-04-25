@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using VKWikiAPI.Classes;
 using Newtonsoft.Json.Linq;
-using VKWikiAPI.ToJSONParse;
 namespace VKWikiAPI.Controllers
 {
     public class HomeController : Controller
@@ -37,8 +36,8 @@ namespace VKWikiAPI.Controllers
         }
 
         [HttpGet]
-        public JObject GetWall() {
-            return functional.VKGetFirstPost(AccessToken);
+        public object GetWall() {
+            return functional.VKGetTextsFromSomePosts(AccessToken);
         }
 
        /* [HttpGet]
