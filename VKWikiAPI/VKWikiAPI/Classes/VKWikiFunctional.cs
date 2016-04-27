@@ -11,45 +11,16 @@ namespace VKWikiAPI.Classes
     public class VKWikiFunctional
     {
 
-        public object VKGetFriends()
-        {
-            List<string> friends = new List<string>();
-
-            string responseFromServer = null;
-            string url = "https://api.vk.com/method/friends.get?count=2&user_id=166724944&access_token=";
-
-            WebRequest req = WebRequest.Create(url);
-            WebResponse resp = req.GetResponse();
-
-
-            using (Stream dataStream = resp.GetResponseStream())
-            {
-                using (StreamReader reader = new StreamReader(dataStream))
-                {
-                    responseFromServer = reader.ReadToEnd();
-                }
-            }
-
-            JObject result = JObject.Parse(responseFromServer);
-            List<string> friendsIds = new List<string>();
-
-            foreach (var c in result["response"]) {
-                friendsIds.Add(c.ToString());
-            }
-
-            var friendsIdsJSON = JsonConvert.SerializeObject(friendsIds);
-            return friendsIdsJSON;
-        }
+      
 
         private List<string> VKGetTextsFromPosts()
         {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?count=1&offset=0&owner_id=166724944";
+            string url = "https://api.vk.com/method/wall.get?count=3&offset=0&owner_id=166724944";
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
-            // про предлоги спросить 
-            //про то , сколько обрабатывать постов
+            
             using (Stream dataStream = resp.GetResponseStream())
             {
                 using (StreamReader reader = new StreamReader(dataStream))
@@ -72,38 +43,68 @@ namespace VKWikiAPI.Classes
 
 
 
-        public object GetCountOfWords() { //SetWeightsOfWordsInPosts
+        public string VKGetKeyWords() { //SetWeightsOfWordsInPosts
+
             List<string> posts = this.VKGetTextsFromPosts();
             List<string> allWords = new List<string>();//all words of all posts
-            Dictionary<string, int> countOfWords = new Dictionary<string, int>();//word , count of this word in total posts
-            
+            Dictionary<string, double> freqOfWords = new Dictionary<string, double>();//word , freq in total posts
+            Dictionary<string, double> weightOfWords = new Dictionary<string, double>();
+            int countOfLinks = 0;
+            double averageWeight = 0;
 
-         
             string [] preparedPost = null;
+
+
 
             foreach (var current in posts) { //нашли все слова
                 preparedPost = current.ToLower().Split(new char[] {'$','!','&','?','.',' ','-'});
                 foreach (var c in preparedPost) { allWords.Add(c); }
             }
 
-            int numberOfOccurrences = 0;
 
+
+            int numberOfOccurrences = 0;
             foreach (var currentWord in allWords)
             {
-                if (!countOfWords.ContainsKey(currentWord))
+                if (!freqOfWords.ContainsKey(currentWord))
                 {
-                    numberOfOccurrences = allWords.Where(x => x == currentWord).Count();
-                    countOfWords.Add(currentWord, numberOfOccurrences);
+                    numberOfOccurrences = allWords.Select(x => x == currentWord).Count();
+                    freqOfWords.Add(currentWord, numberOfOccurrences/allWords.Count); //word freq at the total words
                     numberOfOccurrences = 0;
                 }
-
             }
-                var numberOfOccurencesToJSON = JsonConvert.SerializeObject(numberOfOccurrences);
-                return numberOfOccurrences;
+
+
+
+            foreach (var word in freqOfWords) {
+                if (!weightOfWords.ContainsKey(word.Key)) {
+
+                    countOfLinks = this.WikiGetCountOfLinksTo(word.Key);
+                    if (countOfLinks <= 5) { continue; }
+
+                    weightOfWords.Add(word.Key, countOfLinks * word.Value);
+
+                }
+            }
+
+            averageWeight = weightOfWords.Sum(freq => freq.Value) / weightOfWords.Count;
+            string keyWords = JsonConvert.SerializeObject(weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList());
+
+            return JsonConvert.SerializeObject(keyWords);
         }
 
         
-        public string WikiGetLinksBy(string word) {
+
+
+
+
+
+
+
+
+
+
+        public int WikiGetCountOfLinksTo(string word) {
             string responseFromServer = null;
             
             string url = "https://ru.wikipedia.org/w/api.php?action=opensearch&search="+ word +"&utf8=true";
@@ -118,11 +119,12 @@ namespace VKWikiAPI.Classes
             }
 
             JArray result = JArray.Parse(responseFromServer);
-            if (result.Count != 0)
+            if (result.Count != 0 &&result[3].Count()>=5)
             {
-                return result[3].ElementAt(0).ToString();
+                return result[3].Count();
             }
-            return null;
+
+            return -1;
         }
         
 

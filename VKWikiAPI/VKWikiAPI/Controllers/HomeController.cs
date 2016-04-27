@@ -22,25 +22,16 @@ namespace VKWikiAPI.Controllers
         {
             return View();
         }
-
         [HttpGet]
         public ActionResult SetToken(string accessToken) {
            AccessToken = accessToken;
             return View();
-        }
-
+        } 
       
+       
         [HttpGet]
-        public object GetFriends() {
-            return functional.VKGetFriends();
+        public object GetKeyWords() {
+           return functional.VKGetKeyWords();
         }
-
-     
-
-        [HttpGet]
-        public string GetNumberOfLinks(string word) {
-            return functional.WikiGetLinksBy(word);
-        }
-
     }
 }

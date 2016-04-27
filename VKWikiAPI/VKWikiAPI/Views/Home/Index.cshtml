@@ -8,8 +8,10 @@
 
 <button type="button" onclick="GoToVK()"> VK authorize </button>
 <button type="button" onclick="SetToken()"> Get token </button>
-<br><br>
-<button type="button" onclick="GetLinks('Собака')"> Get links</button>
+<button type="button" onclick="GetKeyWords()"> Get key words </button>
+    <br><br>
+
+
 
 <script>
     
@@ -39,21 +41,30 @@
         window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999,status&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
 
     }
- 
 
-
-    function GetLinks(word) {
+    function GetKeyWords() {
         $.ajax({
             type: "GET",
-            url: "../Home/GetNumberOfLinks",
-            data:{"word":word},
-            success: function (dataFromServer) {
-                if (dataFromServer != null) {
-                    alert(dataFromServer);
-                }
-                else { alert("Information not found ");}
+            url: "../Home/GetKeyWords",
+            success: function (json) {
+
+                alert(json);
+
             }
         });
     }
 
+
+
+
+    function TestFunc() {
+        var json = '{"бррр":1,"слово":2,"имба":3}';
+        var result = JSON.parse(json);
+            
+        var resultString = "";
+        Object.keys(result).forEach(function (item) {
+            resultString += item.toString();
+        });
+        alert(resultString);
+    }
 </script>
