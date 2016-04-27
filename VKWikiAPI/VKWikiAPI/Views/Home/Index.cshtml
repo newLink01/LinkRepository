@@ -2,15 +2,15 @@
     ViewBag.Title = "Index";
 }
 
-
 <h2>Index</h2>
+
+
 
 <button type="button" onclick="GoToVK()"> VK authorize </button>
 <button type="button" onclick="SetToken()"> Get token </button>
-<button type="button" onclick="ShowFriends()"> Show friends </button>
-<button type="button" onclick="GetTextsFromPosts()"> get wall </button>
-
-<button type="button" onclick="TestGet()"> Get test values </button>
+<br><br>
+<button type="button" onclick="GetTextsFromPosts()"> </button>
+<button type="button" onclick="GetLinks('Собака')"> Get links</button>
 
 <script>
     
@@ -36,53 +36,87 @@
                 alert("Token has been received.");
             });
     }
-
     function GoToVK() {
         window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999,status&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
 
     }
-
-   
-
     function ShowFriends() {
-
+/*
         $.get("http://localhost:63643/Home/GetFriends", function (json) {
             var result = JSON.parse(json);
+            var resultStirng = "";
             result.forEach(function (item, i) {
-                alert(item);
+                resultStirng += item+=',';
             });
+            alert(resultStirng);
         }
-        );
+        
+        );*/
+
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:63643/Home/GetFriends",
+            success: function (json) {
+                var result = JSON.parse(json);
+                var resultStirng = "";
+                result.forEach(function (item, i) {
+                    resultStirng += item += ',';
+                });
+                alert(resultStirng);
+            }
+        });
+        
     }
-    
 
-
-    function TestFunc() {
-       /* var json = '{"resp": [123,123]}';
-        var json2 = '{"resp : "}'
-
-        var result = JSON.parse(json);
-
-        result.resp.forEach(function (item, i) {
-            alert(i + " : " + item);
-        });*/
-
-        var json = '{"resp" : [1117,{"id" = 1,"name" = "zhenya"}]}';
-        var result = JSON.parse(json);
-       // alert(json);
-        alert("fasdasf");
-    }
 
     function GetTextsFromPosts() {
         $.get("http://localhost:63643/Home/GetWall", function (json) {
             var result = JSON.parse(json);
-            
+            var resultString = "";
             result.forEach(function (item, i) {
-                alert(item);
+                resultString += item;
             });
            
-            
+            alert(resultString);
+        });
+    }
 
+
+    function TestFunc() {
+       /* $.ajax({
+            type: "GET",
+            url: "https://ru.wikipedia.org/w/api.php?action=opensearch&search=Ян&limit=1&utf8=true",
+            success: function (json) {
+                var result = JSON.parse(json);
+                var resultStirng = "";
+                result.forEach(function (item, i) {
+                    resultStirng += item += ',';
+                });
+                alert(resultStirng);
+            }
+        });*/
+
+        var json = '["ян",["Ян"],["Ян (имя) — мужское имя, список персон, известных по имени."],["https://ru.wikipedia.org/wiki/%D0%AF%D0%BD","https://ru.wikipedia.org/wiki/%D0%AF%D0%BD"]]';
+        var result = JSON.parse(json);
+
+        var resultString = "";
+        result[3].forEach(function (item, i) {
+            resultString += item+=";";
+        });
+
+        alert(resultString);
+    }
+
+
+
+    function GetLinks(word,secondWord) {
+        $.ajax({
+            type: "GET",
+            url: "../Home/GetNumberOfLinks",
+            data:{"word":word},
+            success: function (dataFromServer) {
+                alert(dataFromServer);
+            }
         });
     }
 

@@ -32,14 +32,18 @@ namespace VKWikiAPI.Controllers
       
         [HttpGet]
         public object GetFriends() {
-            return functional.VKGetFriends(AccessToken);
+            return functional.VKGetFriends();
         }
 
         [HttpGet]
         public object GetWall() {
-            return functional.VKGetTextsFromSomePosts(AccessToken);
+            return functional.VKGetTextsFromSomePosts();
         }
 
-       
+        [HttpGet]
+        public string GetNumberOfLinks(string word,string secondWord) {
+            return functional.WikiGetLinksBy(word,secondWord);
+        }
+
     }
 }
