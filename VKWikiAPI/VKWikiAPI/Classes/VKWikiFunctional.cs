@@ -13,10 +13,10 @@ namespace VKWikiAPI.Classes
 
       
 
-        private List<string> VKGetTextsFromPosts()
-        {
+        public List<string> VKGetTextsFromPosts(int postsCount,string ownerId = "166724944")
+            {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?count=3&offset=0&owner_id=166724944";
+            string url = "https://api.vk.com/method/wall.get?count=3&offset=0&owner_id="+ownerId;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
@@ -45,7 +45,7 @@ namespace VKWikiAPI.Classes
 
         public JArray VKGetKeyWords() { //SetWeightsOfWordsInPosts
 
-            List<string> posts = this.VKGetTextsFromPosts();
+            List<string> posts = this.VKGetTextsFromPosts(3);
             List<string> allWords = new List<string>();//all words of all posts
             Dictionary<string, double> freqOfWords = new Dictionary<string, double>();//word , freq in total posts
             Dictionary<string, double> weightOfWords = new Dictionary<string, double>();
@@ -57,7 +57,7 @@ namespace VKWikiAPI.Classes
 
 
             foreach (var current in posts) { //нашли все слова
-                preparedPost = current.ToLower().Split(new char[] {'$','!','&','?','.',' ','-'});
+                preparedPost = current.ToLower().Split(new char[] {'$','!','&','?','.',' ','-','[',']','+','*','/','|','_'});
                 foreach (var c in preparedPost) { allWords.Add(c); }
             }
 

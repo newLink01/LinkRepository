@@ -33,5 +33,10 @@ namespace VKWikiAPI.Controllers
         public JArray GetKeyWords() {
            return functional.VKGetKeyWords();
         }
+
+        [HttpGet]
+        public string GetAccessToken() {
+            return AccessToken;
+        }
     }
 }

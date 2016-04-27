@@ -6,15 +6,14 @@
 
 
 
-<button type="button" onclick="GoToVK()"> VK authorize </button>
-<button type="button" onclick="SetToken()"> Get token </button>
+
 <button type="button" onclick="GetKeyWords()"> Get key words </button>
     <br><br>
 
 
 
 <script>
-    
+  
     function SetToken() {
         var accessToken = "";
         var currentUrl = window.location.href.toString();
@@ -38,18 +37,42 @@
             });
     }
     function GoToVK() {
-        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
 
+        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
+       
+        $(window).on('popstate', function (e) {
+            
+            Application.updateState();
+            SetToken();
+        });
     }
 
     function GetKeyWords() {
+
+        $.get("")
+        
+        $.ajax({
+            type: "GET",
+            url: "..Home/GetAccessToken",
+            success: function (result) {
+                if (result == null) {
+                    alert("login to use this function");
+                    return;
+                    
+                }
+            }
+
+        });
+
+
+
         $.ajax({
             type: "GET",
             url: "../Home/GetKeyWords",
             success: function (json) {
                 var result = JSON.parse(json);
-
-                alert(json);
+                
+                alert(result[0]);
                 
               
             }
