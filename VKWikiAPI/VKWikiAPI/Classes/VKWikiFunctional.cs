@@ -43,7 +43,7 @@ namespace VKWikiAPI.Classes
 
 
 
-        public string VKGetKeyWords() { //SetWeightsOfWordsInPosts
+        public JArray VKGetKeyWords() { //SetWeightsOfWordsInPosts
 
             List<string> posts = this.VKGetTextsFromPosts();
             List<string> allWords = new List<string>();//all words of all posts
@@ -90,7 +90,8 @@ namespace VKWikiAPI.Classes
             averageWeight = weightOfWords.Sum(freq => freq.Value) / weightOfWords.Count;
             string keyWords = JsonConvert.SerializeObject(weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList());
 
-            return JsonConvert.SerializeObject(keyWords);
+            return JArray.FromObject(weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList());
+           
         }
 
         

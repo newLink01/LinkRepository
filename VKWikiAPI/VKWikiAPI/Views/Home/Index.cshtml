@@ -38,7 +38,7 @@
             });
     }
     function GoToVK() {
-        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999,status&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
+        window.location.href = 'https://oauth.vk.com/authorize?client_id=5425400&scope=99999999&redirect_uri=http://localhost:63643/Home/Index&display=page&v=5.50&response_type=token';
 
     }
 
@@ -47,9 +47,11 @@
             type: "GET",
             url: "../Home/GetKeyWords",
             success: function (json) {
+                var result = JSON.parse(json);
 
                 alert(json);
-
+                
+              
             }
         });
     }
