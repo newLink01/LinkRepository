@@ -16,7 +16,7 @@ namespace VKWikiAPI.Classes
         public List<string> VKGetTextsFromPosts(int postsCount,string ownerId = "166724944")
             {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?count=1&offset=0&owner_id="+ownerId;
+            string url = "https://api.vk.com/method/wall.get?count=3&offset=0&owner_id="+ownerId;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
@@ -43,7 +43,7 @@ namespace VKWikiAPI.Classes
 
 
 
-        public JArray VKGetKeyWords() { //SetWeightsOfWordsInPosts
+        public JObject VKGetKeyWords() { //SetWeightsOfWordsInPosts
 
             List<string> posts = this.VKGetTextsFromPosts(3);
             List<string> allWords = new List<string>();//all words of all posts
@@ -65,14 +65,14 @@ namespace VKWikiAPI.Classes
 
 
 
-            int numberOfOccurrences = 0;
+         
             foreach (var currentWord in allWords)
             {
                 if (!freqOfWords.ContainsKey(currentWord))
                 {
-                    numberOfOccurrences = allWords.Select(x => x == currentWord).Count();
-                    freqOfWords.Add(currentWord, numberOfOccurrences/allWords.Count); //word freq at the total words
-                    numberOfOccurrences = 0;
+                    //allWords.Where(x => x == currentWord).Count()
+                    //(double)(5 / allWords.Count
+                    freqOfWords.Add(currentWord, allWords.Where(x => x == currentWord).Count() / (allWords.Count*1.0)); //word freq at the total words
                 }
             }
 
@@ -92,15 +92,17 @@ namespace VKWikiAPI.Classes
 
 
             averageWeight = weightOfWords.Sum(freq => freq.Value) / weightOfWords.Count;
-            string keyWords = JsonConvert.SerializeObject(weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList());
+           
+
+      
 
             foreach (var current in weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList()) {
                 if (!wordsAndLinks.ContainsKey(current)) {
-                    wordsAndLinks.Add(current, relatedLinksFromWiki.Where(x => x.Key == current).First().Key);
+                    wordsAndLinks.Add(current, relatedLinksFromWiki.Where(x => x.Key == current).First().Value);
                 }
             }
 
-            return JArray.FromObject(wordsAndLinks);
+            return JObject.FromObject(wordsAndLinks);
            
         }
 

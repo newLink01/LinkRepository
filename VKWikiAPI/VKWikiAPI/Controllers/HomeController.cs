@@ -30,7 +30,7 @@ namespace VKWikiAPI.Controllers
       
        
         [HttpGet]
-        public JArray GetKeyWords() {
+        public JObject GetKeyWords() {
            return functional.VKGetKeyWords();
         }
 
