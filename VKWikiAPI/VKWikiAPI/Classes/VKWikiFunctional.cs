@@ -16,7 +16,7 @@ namespace VKWikiAPI.Classes
         public List<string> VKGetTextsFromPosts(int postsCount,string ownerId = "166724944")
             {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?count=3&offset=0&owner_id="+ownerId;
+            string url = "https://api.vk.com/method/wall.get?count=1&offset=0&owner_id="+ownerId;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
@@ -49,7 +49,9 @@ namespace VKWikiAPI.Classes
             List<string> allWords = new List<string>();//all words of all posts
             Dictionary<string, double> freqOfWords = new Dictionary<string, double>();//word , freq in total posts
             Dictionary<string, double> weightOfWords = new Dictionary<string, double>();
-            int countOfLinks = 0;
+            Dictionary<string,string> relatedLinksFromWiki = new Dictionary<string, string>(); //word and referense
+            Dictionary<string, string> wordsAndLinks = new Dictionary<string, string>(); // sorted words and references
+            
             double averageWeight = 0;
 
             string [] preparedPost = null;
@@ -75,22 +77,30 @@ namespace VKWikiAPI.Classes
             }
 
 
+            KeyValuePair<string,int> currentWikiToWord;
 
             foreach (var word in freqOfWords) {
                 if (!weightOfWords.ContainsKey(word.Key)) {
-
-                    countOfLinks = this.WikiGetCountOfLinksTo(word.Key);
-                    if (countOfLinks <= 5) { continue; }
-
-                    weightOfWords.Add(word.Key, countOfLinks * word.Value);
-
+                    currentWikiToWord = this.WikiGetCountOfLinksAndFirstLinkTo(word.Key);
+                    if (currentWikiToWord.Value < 5) { continue; }
+                    //Here we get the word surprising number of references to that more and == 5
+                    relatedLinksFromWiki.Add(word.Key,currentWikiToWord.Key); //add referense to word
+                    weightOfWords.Add(word.Key, currentWikiToWord.Value * word.Value); //calculate weights
                 }
             }
+
+
 
             averageWeight = weightOfWords.Sum(freq => freq.Value) / weightOfWords.Count;
             string keyWords = JsonConvert.SerializeObject(weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList());
 
-            return JArray.FromObject(weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList());
+            foreach (var current in weightOfWords.Where(pair => pair.Value >= averageWeight).Select(x => x.Key).ToList()) {
+                if (!wordsAndLinks.ContainsKey(current)) {
+                    wordsAndLinks.Add(current, relatedLinksFromWiki.Where(x => x.Key == current).First().Key);
+                }
+            }
+
+            return JArray.FromObject(wordsAndLinks);
            
         }
 
@@ -105,7 +115,7 @@ namespace VKWikiAPI.Classes
 
 
 
-        public int WikiGetCountOfLinksTo(string word) {
+        public KeyValuePair<string,int> WikiGetCountOfLinksAndFirstLinkTo(string word) { //первая ссылка и колличество всех ссылок
             string responseFromServer = null;
             
             string url = "https://ru.wikipedia.org/w/api.php?action=opensearch&search="+ word +"&utf8=true";
@@ -120,12 +130,12 @@ namespace VKWikiAPI.Classes
             }
 
             JArray result = JArray.Parse(responseFromServer);
-            if (result.Count != 0 &&result[3].Count()>=5)
+            if (result[3].Count()>=5)
             {
-                return result[3].Count();
+                return new KeyValuePair<string, int>(result[3][0].ToString(),result[3].Count());
             }
 
-            return -1;
+           return new KeyValuePair<string, int>("",-1);
         }
         
 
