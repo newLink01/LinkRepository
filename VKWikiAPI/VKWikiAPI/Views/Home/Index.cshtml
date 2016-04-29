@@ -6,31 +6,103 @@
 
 <script src="~/scripts/jquery-2.2.3.js"></script>
 
-
-
-
-<button type="button" onclick="EnterUserId()"> Enter id </button>
-<div id="UserIdDiv">
-    <input type="text" maxlength="20" id="UserIdValue" >
-    <br>
-    <button type="button" onclick="ConfirmUserId('#UserIdDiv')"> Confirm </button>
+<button onclick="ReplaceWord()"> replace </button>
+<div id="ToReplace">
+    <p>Первая строка</p>
     </div>
+    
+
+
+<button type="button" onclick="Filter()"> Filter </button>
+<br>
+<div id="InfoDiv">
+    User id <br>
+     <input type="text" maxlength="20" id="UserIdValue" > 
+        <br>
+    Offset <br>
+     <input type="text" id="OffsetValue" >
+        <br>
+    <button type="button" onclick="ConfirmInfo('#InfoDiv')"> Confirm </button>
+    
+</div>
     <br>
 
+<button type="button" onclick="ShowMessages()"> Show messages </button>
+<div id="MessagesDiv">
+    <p>Первый параграф</p>
+    <p>Второй параграф</p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>   <!--10-->
+    <p>Первый параграф</p>
+    <p>Второй параграф</p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>   <!--10--><p>Первый параграф</p>
+    <p>Второй параграф</p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>   <!--10-->>
+    </div>
 
-
-
+<br>
+<br>
+<button type="button" onclick="Test()"> Test</button>
 
 
 
 
 
 <script>
+
+    function ReplaceWord() {
+        var s = "asd";
+        
+
+        var elements = $('#ToReplace > p');
+        for (var i = 0; i < elements.length; i++) {
+           // alert(elements[i].textContent.toLowerCase().indexOf("строка"));
+
+            if (elements[i].textContent.toLowerCase().indexOf("строка")) {
+                elements[i].textContent.replace("строка", "новая строка");
+            }
+
+
+
+        }
+    }
+
+
+    </script>
+
+<script>
     var currentUserId;
+    var currentOffset;
+    var currentListOfTexts;
+    var currentKeyWords;
+    var currentReferences;
+
     $(document).ready(function () {
-        $('#UserIdDiv').hide();
+        $('#InfoDiv').hide();
+        $('#MessagesDiv').hide();
 
         $('#ShowMessages').click(function () {
+            
             $('#ToShowMessagesDiv').slideToggle("1000");
             //alert($("p").text());
 
@@ -40,47 +112,120 @@
             }*/
         });
 
+    });
+
+    function TestFunc() {
+        alert($('#MessagesDiv > p').length);
+        var elements = $('#MessagesDiv > p');
+      //  alert(elements.get(0).textContent);    <-- возвращает значение параграфа 
+ 
+        /*$('#MessagesDiv > p').forEach(function (item,i) {
+            item.append(" append string");
+        });*/
+    }
+   
+    /*function ConfirmInfo(id) {
+        currentUserId = $('#UserIdValue').val();
+        currentOffset = $('#OffsetValue').val();
+
+        if (currentOffset.length == 0) { currentOffset = "0"; }
+        if (currentUserId.length == 0) { alert("Enter the user id"); return; }
+
+
+        $(id).slideToggle("1000");
+        if (!$('#MessagesDiv').hidden) { $('#MessagesDiv').slideUp("1000"); }
+        
+        GetKeyWords();
+        GetPosts();
+
+        var s = "SFS";
+        s.tol
+
+        var elements = $('#MessagesDiv > p');
+        var currentP;
+        var currentPToLower;
+
+        for (var i = 0; i < elements.length; i++) {
+            elements.get(i).textContent = "";
+            currentP = elements.get(i);
+
+            currentP.textContent = currentListOfTexts[i];
+            currentPToLower = currentP.toLowerCase();
+
+
+
+        }
+
         
 
-    });
+
+
+    }*/
+    function Filter() {
+        $('#InfoDiv').slideToggle("1000");
+    }
+
+
+
    
-    function ConfirmUserId(id) {
-        $(id).slideToggle("1000");
-        currentUserId = $('#UserIdValue').val();
-       // alert(currentUserId);
+    function ShowMessages() {
+       /* if (currentListOfTexts == null) {
+            alert("Fill the filter");
+            return;
+        }*/
+        $('#MessagesDiv').slideToggle("1000");
+
+
     }
-    function EnterUserId() {
-        $('#UserIdDiv').slideToggle("1000");
-    }
-
-
-
-
-
-
 
     function GetKeyWords() {
 
         $.ajax({
             type: "GET",
             url: "../Home/GetKeyWords",
+            data: { "userId": currentUserId, "offset": currentOffset },
             success: function (json) {
+                currentKeyWords = null;
+                currentReferences = null;
                 var result = JSON.parse(json);
+
+                Object.keys(result).forEach(function (item,i) {
+                    currentKeyWords[i] = item;
+                    currentReferences[i] = result[item];
+                });
+             
                 
-                alert(json);
-                
-              
+               
+       
             }
         });
     }
-    function TestFunc() {
-        var json = '{"бррр":1,"слово":2,"имба":3}';
-        var result = JSON.parse(json);
-            
-        var resultString = "";
-        Object.keys(result).forEach(function (item) {
-            resultString += item.toString();
+    
+    function GetPosts() {
+        $.ajax({
+            type: "GET",
+            url: "../Home/GetPosts",
+            data: { "userId": currentUserId, "offset": currentOffset },
+            success: function (json) {
+                currentListOfTexts = JSON.parse(json);    //присваивает массив мессаг
+            }
         });
-        alert(resultString);
     }
+
+
+    function Test() {
+
+        var str = '{ "first":"val", "second":"val"}';
+        
+        /*Object.keys(JSON.parse(str)).forEach(function (item) {
+            alert(item);
+        });
+        */
+        Object.keys(JSON.parse(str)).forEach(function (item) {
+
+            alert(JSON.parse(str)[item]);
+
+        });
+    }
+
 </script>

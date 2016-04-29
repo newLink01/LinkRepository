@@ -30,13 +30,13 @@ namespace VKWikiAPI.Controllers
       
        
         [HttpGet]
-        public JObject GetKeyWords() {
-           return functional.VKGetKeyWords();
+        public JObject GetKeyWords(string userId , string offset) {
+           return JObject.FromObject(functional.VKGetKeyWords(userId,offset));
         }
 
         [HttpGet]
-        public string GetAccessToken() {
-            return AccessToken;
+        public JArray GetPosts(string userId,string offset) {
+            return JArray.FromObject(functional.VKGetTextsFromPosts(userId, offset));
         }
     }
 }

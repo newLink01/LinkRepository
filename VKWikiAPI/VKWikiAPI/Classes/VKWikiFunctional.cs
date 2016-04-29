@@ -10,13 +10,12 @@ namespace VKWikiAPI.Classes
 {
     public class VKWikiFunctional
     {
-
       
 
-        public List<string> VKGetTextsFromPosts(int postsCount,string ownerId = "166724944")
+        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "5")
             {
             string responseFromServer = null;
-            string url = "https://api.vk.com/method/wall.get?count=3&offset=0&owner_id="+ownerId;
+            string url = "https://api.vk.com/method/wall.get?count="+postsCount+"&offset="+offset+"&owner_id="+ownerId;
 
             WebRequest req = WebRequest.Create(url);
             WebResponse resp = req.GetResponse();
@@ -36,6 +35,9 @@ namespace VKWikiAPI.Classes
                 textsOfThePosts.Add(c["text"].ToString());
             }
 
+           /* foreach (var text in textsOfThePosts) {
+                text.Remove(text.Substring(text.Ind('<'),text.Las))
+            }*/
              return textsOfThePosts; 
            
         }
@@ -43,15 +45,18 @@ namespace VKWikiAPI.Classes
 
 
 
-        public JObject VKGetKeyWords() { //SetWeightsOfWordsInPosts
+        public JObject VKGetKeyWords(string userId, string offset) { //SetWeightsOfWordsInPosts
 
-            List<string> posts = this.VKGetTextsFromPosts(3);
+            List<string> posts = this.VKGetTextsFromPosts(userId,offset); //posts = 30
+
             List<string> allWords = new List<string>();//all words of all posts
             Dictionary<string, double> freqOfWords = new Dictionary<string, double>();//word , freq in total posts
             Dictionary<string, double> weightOfWords = new Dictionary<string, double>();
             Dictionary<string,string> relatedLinksFromWiki = new Dictionary<string, string>(); //word and referense
             Dictionary<string, string> wordsAndLinks = new Dictionary<string, string>(); // sorted words and references
-            
+
+           
+
             double averageWeight = 0;
 
             string [] preparedPost = null;
@@ -119,7 +124,10 @@ namespace VKWikiAPI.Classes
 
         public KeyValuePair<string,int> WikiGetCountOfLinksAndFirstLinkTo(string word) { //первая ссылка и колличество всех ссылок
             string responseFromServer = null;
-            
+            string[] stopWords = { }; //сделать все предлоги и ретурнить -1 если совпало слово с предлогом
+
+
+
             string url = "https://ru.wikipedia.org/w/api.php?action=opensearch&search="+ word +"&utf8=true";
 
             WebRequest req = WebRequest.Create(url);
