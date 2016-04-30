@@ -12,7 +12,7 @@ namespace VKWikiAPI.Classes
     {
       
 
-        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "1")
+        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "5")
             {
             string responseFromServer = null;
             string url = "https://api.vk.com/method/wall.get?count="+postsCount+"&offset="+offset+"&owner_id="+ownerId;

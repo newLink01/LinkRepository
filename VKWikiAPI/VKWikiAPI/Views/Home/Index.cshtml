@@ -157,7 +157,7 @@
                 for (var i = 0; i < currentListOfTexts.length; i++) {
                     for (var wordInd = 0; wordInd < currentKeyWords.length; wordInd++) {
                         text = $('#p' + i).html();
-                        text = text.replace(new RegExp(currentKeyWords[wordInd], 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + currentKeyWords[wordInd] + '</a></html>');
+                        text = text.replace(new RegExp(" "+currentKeyWords[wordInd]+" ", 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + " "+currentKeyWords[wordInd]+" " + '</a></html>');
                        // alert(currentReferences[wordInd].toString());
                         $('#p' + i).html(text);
                     }
