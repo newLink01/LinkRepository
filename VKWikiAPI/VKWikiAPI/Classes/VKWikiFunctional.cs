@@ -12,7 +12,7 @@ namespace VKWikiAPI.Classes
     {
       
 
-        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "5")
+        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "2")
             {
             string responseFromServer = null;
             string url = "https://api.vk.com/method/wall.get?count="+postsCount+"&offset="+offset+"&owner_id="+ownerId;
@@ -109,8 +109,20 @@ namespace VKWikiAPI.Classes
         }
 
         public KeyValuePair<string,int> WikiGetCountOfLinksAndFirstLinkTo(string word) { //первая ссылка и колличество всех ссылок
-            string responseFromServer = null;
-            string[] stopWords = { }; //сделать все предлоги и ретурнить -1 если совпало слово с предлогом
+
+           /* using (StreamReader reader = new StreamReader("F:/University/Programming/vs/Projects/GitHubLocal/LinkRepository/VKWikiAPI/VKWikiAPI/App_Data/Pretexts.txt")) {
+                while (true) {
+                    string str = reader.ReadLine();
+                    if (str == null) { break; }
+
+                    if (word.ToLower() == str.ToLower()) {
+                         return new KeyValuePair<string, int>("", -1);
+                    }
+                }
+            }
+            */
+                string responseFromServer = null;
+            
 
 
 

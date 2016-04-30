@@ -6,10 +6,6 @@
 
 <script src="~/scripts/jquery-2.2.3.js"></script>
 
-<button type="button" onclick="Changetest()"> change </button>
-
-
-
 
 
 <button type="button" onclick="Filter()"> Filter </button>
@@ -120,9 +116,10 @@
         currentOffset = $('#OffsetValue').val();
         if (currentOffset.length == 0) { currentOffset = "0"; }
         if (currentUserId.length == 0) { alert("Enter the user id"); return; }
+
         $(id).slideToggle("1000");
         if (!$('#MessagesDiv').hidden) { $('#MessagesDiv').slideUp("1000"); }
-        if (!$('#ShowMessagesButton').hidden) { $('#ShowMessagesButton').slideToggle("1000"); }
+        $('#ShowMessagesButton').slideToggle("1000"); 
         
         GetPosts(); 
     }
@@ -138,7 +135,7 @@
     }
 
     function GetKeyWords() {
-
+        alert("Finding the keywords started.");
         $.ajax({
             type: "GET",
             url: "../Home/GetKeyWords",
@@ -153,19 +150,26 @@
                     currentReferences[i] = result[item];
                 });
             
-                var text;
+              var text;
+              
                 for (var i = 0; i < currentListOfTexts.length; i++) {
                     for (var wordInd = 0; wordInd < currentKeyWords.length; wordInd++) {
                         text = $('#p' + i).html();
-                        text = text.replace(new RegExp(" "+currentKeyWords[wordInd]+" ", 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + " "+currentKeyWords[wordInd]+" " + '</a></html>');
-                       // alert(currentReferences[wordInd].toString());
+
+                        text = text.replace(new RegExp(" " + currentKeyWords[wordInd] + " ", 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + " " + currentKeyWords[wordInd] + " " + '</a></html>');
+                        text = text.replace(new RegExp(currentKeyWords[wordInd] + " ", 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + currentKeyWords[wordInd] + " " + '</a></html>');
+                        text = text.replace(new RegExp(" " + currentKeyWords[wordInd], 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + " " + currentKeyWords[wordInd] + '</a></html>');
+                    
                         $('#p' + i).html(text);
                     }
                     
-                        
+                   /* if (i == currentListOfText.length - 1) {
+                        if ($('#ShowMessagesButton').hidden) { $('#ShowMessagesButton').slideToggle("1000"); }
+                    }*/
+                    if (i == currentListOfTexts.length - 1) { alert("Finding keywords is complete!"); }
                 }
 
-                if ($('#ShowMessagesButton').hidden) { $('#ShowMessagesButton').slideToggle("1000"); }
+                
  
             }
         });
@@ -177,14 +181,21 @@
             url: "../Home/GetPosts",
             data: { "userId": currentUserId, "offset": currentOffset },
             success: function (json) {
-                currentListOfTexts = JSON.parse(json);    
-                            
+                currentListOfTexts = JSON.parse(json);
+
+               /* if (currentListOfTexts.length == 0) {
+                    alert("No posts found.");
+                    $('#ShowMessagesButton').slideToggle("1000");
+                    return;
+                }
+                */
                 for (var ind = 0; ind < 30; ind++) {
                     $('#p'+i).text("");
                 }
                 for (var i = 0; i < currentListOfTexts.length; i++) {
                     $('#p' + i).text(currentListOfTexts[i]);
                 }
+                
                 GetKeyWords();
                 
             }
