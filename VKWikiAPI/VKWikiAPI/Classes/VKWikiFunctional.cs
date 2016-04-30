@@ -29,7 +29,7 @@ namespace VKWikiAPI.Classes
             }
             JObject result = JObject.Parse(responseFromServer);
             List<string> textsOfThePosts = new List<string>();
-            //if (result["response"] == null) { new List<string>(); }
+            if (result["error"] != null) { return new List<string>(); }
 
             foreach (var c in result["response"]) {
                 if (c.Type != JTokenType.Object || c["text"].ToString().Length == 0) continue;
