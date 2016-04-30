@@ -183,12 +183,12 @@
             success: function (json) {
                 currentListOfTexts = JSON.parse(json);
 
-               /* if (currentListOfTexts.length == 0) {
+                if (currentListOfTexts.length == 0) {
                     alert("No posts found.");
                     $('#ShowMessagesButton').slideToggle("1000");
                     return;
                 }
-                */
+                
                 for (var ind = 0; ind < 30; ind++) {
                     $('#p'+i).text("");
                 }
