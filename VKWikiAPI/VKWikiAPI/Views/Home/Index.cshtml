@@ -6,10 +6,9 @@
 
 <script src="~/scripts/jquery-2.2.3.js"></script>
 
-<button type="button" onclick="ReplaceWord()"> Replace </button>
-<div>
-    <p id="p1">Строка строка</p>
-    </div>
+<button type="button" onclick="Changetest()"> change </button>
+
+
 
 
 
@@ -27,41 +26,41 @@
 </div>
     <br>
 
-<button type="button" onclick="ShowMessages()"> Show messages </button>
+<button type="button" onclick="ShowMessages()" id="ShowMessagesButton"> Show messages </button>
 <div id="MessagesDiv">
-    <p>Первый параграф</p>
-    <p>Второй параграф</p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>   <!--10-->
-    <p>Первый параграф</p>
-    <p>Второй параграф</p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>   <!--10--><p>Первый параграф</p>
-    <p>Второй параграф</p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>   <!--10-->>
+    <p id="p0"></p>
+    <p id="p1"></p>
+    <p id="p2"></p>
+    <p id="p3"></p>
+    <p id="p4"></p>
+    <p id="p5"></p>
+    <p id="p6"></p>
+    <p id="p7"></p>
+    <p id="p8"></p>
+    <p id="p9"></p>
+    <p id="p10"></p>   
+    <p id="p11"></p>
+    <p id="p12"></p>
+    <p id="p13"></p>
+    <p id="p14"></p>
+    <p id="p15"></p>
+    <p id="p16"></p>
+    <p id="p17"></p>
+    <p id="p18"></p>
+    <p id="p19"></p>
+    <p id="p20"></p>
+    <p id="p21"></p>
+    <p id="p22"></p>
+    <p id="p23"></p>
+    <p id="p24"></p>
+    <p id="p25"></p>
+    <p id="p26"></p>
+    <p id="p27"></p>
+    <p id="p28"></p>
+    <p id="p29"></p>   
+    <p id="p30"></p>
     </div>
 
-<br>
-<br>
 
 
 
@@ -69,17 +68,27 @@
 
 
 <script>
-    //  elements[i].textContent = elements[i].textContent.replace(new RegExp("строка", 'ig'), '<a href = "https://www.google.ru/">строка</a><');
-    function ReplaceWord() {
-        var text = $('#p1').html();
-        text = text.replace(new RegExp("строка", "ig"), '<html><a href = "https://www.google.ru/">строка</a></html>');
-        $('#p1').html(text);
+    function Changetest() {
+        GetKeyWords();
+
+       /* text = $('#pp'+1).html();
+       text = text.replace(new RegExp("прямой", 'ig'), '<html><a href = "https://www.google.ru/">прямой</a></html>');
+        $('#pp1').html(text);
+          
+        var text;
+       $('#pp1').text(""); //обнуляет содержимое элемента
+        
+        for (var i = 1; i <= 30; i++) {
+            text = $('#pp' + i).html();
+            text = text.replace(new RegExp("прямой", 'ig'), '<html><a href = "https://www.google.ru/">прямой</a></html>');
+            $('#pp' + i).html(text); //добавляет ссыли 
+        }*/
+         
     }
-
-
     </script>
 
 <script>
+    //166724944
     var currentUserId;
     var currentOffset;
     var currentListOfTexts;
@@ -102,69 +111,30 @@
         });
 
     });
-
-    function TestFunc() {
-        alert($('#MessagesDiv > p').length);
-        var elements = $('#MessagesDiv > p');
-      //  alert(elements.get(0).textContent);    <-- возвращает значение параграфа 
- 
-        /*$('#MessagesDiv > p').forEach(function (item,i) {
-            item.append(" append string");
-        });*/
-    }
    
-    /*function ConfirmInfo(id) {
+
+
+    function ConfirmInfo(id) {
+        $('#ShowMessagesButton').slideToggle("1000");
         currentUserId = $('#UserIdValue').val();
         currentOffset = $('#OffsetValue').val();
-
         if (currentOffset.length == 0) { currentOffset = "0"; }
         if (currentUserId.length == 0) { alert("Enter the user id"); return; }
-
-
         $(id).slideToggle("1000");
         if (!$('#MessagesDiv').hidden) { $('#MessagesDiv').slideUp("1000"); }
+        if (!$('#ShowMessagesButton').hidden) { $('#ShowMessagesButton').slideToggle("1000"); }
         
-        GetKeyWords();
-        GetPosts();
-
-        var s = "SFS";
-        s.tol
-
-        var elements = $('#MessagesDiv > p');
-        var currentP;
-        var currentPToLower;
-
-        for (var i = 0; i < elements.length; i++) {
-            elements.get(i).textContent = "";
-            currentP = elements.get(i);
-
-            currentP.textContent = currentListOfTexts[i];
-            currentPToLower = currentP.toLowerCase();
+        GetPosts(); 
+    }
 
 
 
-        }
 
-        
-
-
-
-    }*/
     function Filter() {
         $('#InfoDiv').slideToggle("1000");
     }
-
-
-
-   
     function ShowMessages() {
-       /* if (currentListOfTexts == null) {
-            alert("Fill the filter");
-            return;
-        }*/
         $('#MessagesDiv').slideToggle("1000");
-
-
     }
 
     function GetKeyWords() {
@@ -174,47 +144,65 @@
             url: "../Home/GetKeyWords",
             data: { "userId": currentUserId, "offset": currentOffset },
             success: function (json) {
-                currentKeyWords = null;
-                currentReferences = null;
+                currentKeyWords = [];
+                currentReferences = [];
                 var result = JSON.parse(json);
 
-                Object.keys(result).forEach(function (item,i) {
+              Object.keys(result).forEach(function (item,i) {
                     currentKeyWords[i] = item;
                     currentReferences[i] = result[item];
                 });
-             
-                
-               
-       
+            
+                var text;
+                for (var i = 0; i < currentListOfTexts.length; i++) {
+                    for (var wordInd = 0; wordInd < currentKeyWords.length; wordInd++) {
+                        text = $('#p' + i).html();
+                        text = text.replace(new RegExp(currentKeyWords[wordInd], 'ig'), '<html><a href = ' + currentReferences[wordInd] + '>' + currentKeyWords[wordInd] + '</a></html>');
+                       // alert(currentReferences[wordInd].toString());
+                        $('#p' + i).html(text);
+                    }
+                    
+                        
+                }
+
+                if ($('#ShowMessagesButton').hidden) { $('#ShowMessagesButton').slideToggle("1000"); }
+ 
             }
         });
     }
-    
     function GetPosts() {
+     
+        $.ajax({
+            type: "GET",
+            url: "../Home/GetPosts",
+            data: { "userId": currentUserId, "offset": currentOffset },
+            success: function (json) {
+                currentListOfTexts = JSON.parse(json);    
+                            
+                for (var ind = 0; ind < 30; ind++) {
+                    $('#p'+i).text("");
+                }
+                for (var i = 0; i < currentListOfTexts.length; i++) {
+                    $('#p' + i).text(currentListOfTexts[i]);
+                }
+                GetKeyWords();
+                
+            }
+        });
+    }
+ 
+    /*function GetPosts() {
+     
         $.ajax({
             type: "GET",
             url: "../Home/GetPosts",
             data: { "userId": currentUserId, "offset": currentOffset },
             success: function (json) {
                 currentListOfTexts = JSON.parse(json);    //присваивает массив мессаг
+                //alert("complite")
+                $('#ShowMessagesButton').attr("hidden", false);
+               
             }
         });
-    }
-
-
-    function Test() {
-
-        var str = '{ "first":"val", "second":"val"}';
-        
-        /*Object.keys(JSON.parse(str)).forEach(function (item) {
-            alert(item);
-        });
-        */
-        Object.keys(JSON.parse(str)).forEach(function (item) {
-
-            alert(JSON.parse(str)[item]);
-
-        });
-    }
-
+    }*/
 </script>

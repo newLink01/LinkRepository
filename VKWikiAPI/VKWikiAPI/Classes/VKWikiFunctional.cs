@@ -12,7 +12,7 @@ namespace VKWikiAPI.Classes
     {
       
 
-        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "5")
+        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "1")
             {
             string responseFromServer = null;
             string url = "https://api.vk.com/method/wall.get?count="+postsCount+"&offset="+offset+"&owner_id="+ownerId;
@@ -41,9 +41,6 @@ namespace VKWikiAPI.Classes
              return textsOfThePosts; 
            
         }
-
-
-
 
         public JObject VKGetKeyWords(string userId, string offset) { //SetWeightsOfWordsInPosts
 
@@ -110,17 +107,6 @@ namespace VKWikiAPI.Classes
             return JObject.FromObject(wordsAndLinks);
            
         }
-
-        
-
-
-
-
-
-
-
-
-
 
         public KeyValuePair<string,int> WikiGetCountOfLinksAndFirstLinkTo(string word) { //первая ссылка и колличество всех ссылок
             string responseFromServer = null;
