@@ -31,7 +31,7 @@ namespace VKWikiAPI.Controllers
        
         [HttpGet]
         public JObject GetKeyWords(string userId , string offset) {
-           return JObject.FromObject(functional.VKGetKeyWords(userId,offset));
+           return JObject.FromObject(functional.VKGetKeywords(userId,offset));
         }
 
         [HttpGet]

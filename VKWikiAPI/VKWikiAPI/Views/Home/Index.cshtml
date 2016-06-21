@@ -8,7 +8,7 @@
 
 
 
-<button type="button" onclick="Filter()"> Filter </button>
+<button type="button" onclick="Filter()" id="filterButton"> Filter </button>
 <br>
 <div id="InfoDiv">
     User id <br>
@@ -60,28 +60,11 @@
 
 
 
-
-
-
 <script>
-    function Changetest() {
-        GetKeyWords();
-
-       /* text = $('#pp'+1).html();
-       text = text.replace(new RegExp("прямой", 'ig'), '<html><a href = "https://www.google.ru/">прямой</a></html>');
-        $('#pp1').html(text);
-          
-        var text;
-       $('#pp1').text(""); //обнуляет содержимое элемента
-        
-        for (var i = 1; i <= 30; i++) {
-            text = $('#pp' + i).html();
-            text = text.replace(new RegExp("прямой", 'ig'), '<html><a href = "https://www.google.ru/">прямой</a></html>');
-            $('#pp' + i).html(text); //добавляет ссыли 
-        }*/
-         
-    }
     </script>
+
+
+  
 
 <script>
     //166724944
@@ -94,16 +77,8 @@
     $(document).ready(function () {
         $('#InfoDiv').hide();
         $('#MessagesDiv').hide();
-
         $('#ShowMessages').click(function () {
-            
             $('#ToShowMessagesDiv').slideToggle("1000");
-            //alert($("p").text());
-
-            /*for (var i = 0 ; i < $("p").length; i++) {
-                alert($("p")[i].textContent);
-               
-            }*/
         });
 
     });
@@ -120,7 +95,7 @@
         $(id).slideToggle("1000");
         if (!$('#MessagesDiv').hidden) { $('#MessagesDiv').slideUp("1000"); }
         $('#ShowMessagesButton').slideToggle("1000"); 
-        
+        $('#filterButton').slideToggle("1000");
         GetPosts(); 
     }
 
@@ -136,6 +111,7 @@
 
     function GetKeyWords() {
         alert("Finding the keywords started.");
+      
         $.ajax({
             type: "GET",
             url: "../Home/GetKeyWords",
@@ -151,7 +127,6 @@
                 });
             
               var text;
-              
                 for (var i = 0; i < currentListOfTexts.length; i++) {
                     for (var wordInd = 0; wordInd < currentKeyWords.length; wordInd++) {
                         text = $('#p' + i).html();
@@ -162,11 +137,7 @@
                     
                         $('#p' + i).html(text);
                     }
-                    
-                   /* if (i == currentListOfText.length - 1) {
-                        if ($('#ShowMessagesButton').hidden) { $('#ShowMessagesButton').slideToggle("1000"); }
-                    }*/
-                    if (i == currentListOfTexts.length - 1) { alert("Finding keywords is complete!"); }
+                    if (i == currentListOfTexts.length - 1) { alert("Finding keywords is complete!"); $('#filterButton').slideToggle("1000"); }
                 }
 
                 
@@ -185,13 +156,15 @@
 
                 if (currentListOfTexts.length == 0) {
                     alert("No posts found.");
-                    $('#ShowMessagesButton').slideToggle("1000");
+                    if($('#ShowMessagesButton').hidden) $('#ShowMessagesButton').slideToggle("1000");
+                    $('#filterButton').slideToggle("1000");
                     return;
                 }
                 
                 for (var ind = 0; ind < 30; ind++) {
-                    $('#p'+i).text("");
+                    $('#p' + i).text("");
                 }
+
                 for (var i = 0; i < currentListOfTexts.length; i++) {
                     $('#p' + i).text(currentListOfTexts[i]);
                 }
