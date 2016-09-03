@@ -6,13 +6,36 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Text;
 namespace VKWikiAPI.Classes
 {
     public class VKWikiFunctional
     {
-      
+        public string RequestToSolarix()
+        {
 
-        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "20")
+            string responseFromServer = null;
+            string queryString = "собака собаке розница травянистым быть могла и собачьей шерсти";
+            string url = "http://www.solarix.ru/php/lemma-provider.php?query=" + queryString;
+
+            WebRequest req = WebRequest.Create(url);
+            WebResponse resp = req.GetResponse();
+
+
+            using (Stream dataStream = resp.GetResponseStream())
+            {
+                using (StreamReader reader = new StreamReader(dataStream, Encoding.Default))
+                {
+                    responseFromServer = reader.ReadToEnd();
+                }
+            }
+
+
+            return responseFromServer;
+
+        }
+
+        public List<string> VKGetTextsFromPosts(string ownerId,string offset,string postsCount = "30")
             {
             string responseFromServer = null;
             string url = "https://api.vk.com/method/wall.get?count="+postsCount+"&offset="+offset+"&owner_id="+ownerId;
@@ -42,8 +65,7 @@ namespace VKWikiAPI.Classes
              return textsOfThePosts; 
            
         }
-
-        public JObject VKGetKeyWords(string userId, string offset) { //SetWeightsOfWordsInPosts
+        public JObject VKGetKeywords(string userId, string offset) { //SetWeightsOfWordsInPosts
 
             List<string> posts = this.VKGetTextsFromPosts(userId,offset); //posts = 30
 
@@ -61,8 +83,8 @@ namespace VKWikiAPI.Classes
 
 
 
-            foreach (var current in posts) { //нашли все слова
-                preparedPost = current.ToLower().Split(new char[] {'$','!','&','?','.',' ','-','[',']','+','*','/','|','_'});
+            foreach (var current in posts) { 
+                preparedPost = current.ToLower().Split(new char[] {'$','!','&','?','.',' ','-','[',']','+','*','/','|','_','(',')'});
                 foreach (var c in preparedPost) { allWords.Add(c); }
             }
 
@@ -108,7 +130,6 @@ namespace VKWikiAPI.Classes
             return JObject.FromObject(wordsAndLinks);
            
         }
-
         public KeyValuePair<string,int> WikiGetCountOfLinksAndFirstLinkTo(string word) { //первая ссылка и колличество всех ссылок
 
             using (StreamReader reader = new StreamReader("F:/University/Programming/vs/Projects/GitHubLocal/LinkRepository/VKWikiAPI/VKWikiAPI/App_Data/Pretexts.txt")) {
