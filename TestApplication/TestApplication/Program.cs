@@ -10,6 +10,9 @@ namespace TestApplication
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Some changes");
+
+
             Console.WriteLine("Test application");
             Console.ReadKey();
         }
