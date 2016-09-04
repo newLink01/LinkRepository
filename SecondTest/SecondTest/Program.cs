@@ -4,17 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestApplication
+namespace SecondTest
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Some changes");
-
-
-            Console.WriteLine("Test application");
-            Console.ReadKey();
         }
     }
 }
