@@ -10,10 +10,20 @@ namespace TestApplication
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Some changes");
+            #region firstList
+            List<int> firstList = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
+            var result = firstList.Where(x => x % 2 == 0).ToList();
 
-            Console.WriteLine("Test application");
+            firstList[1] = 1;
+
+            result = firstList.Where(x => x % 2 == 0).ToList();
+
+            foreach (var elem in result) {
+                Console.WriteLine(elem);
+            }
+            #endregion
+
             Console.ReadKey();
         }
     }
