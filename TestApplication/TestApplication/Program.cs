@@ -24,6 +24,7 @@ namespace TestApplication
             }
             #endregion
 
+            List<object> objList = new List<object>();
             Console.ReadKey();
         }
     }
